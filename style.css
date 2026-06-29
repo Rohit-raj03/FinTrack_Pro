@@ -1,0 +1,239 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+:root {
+  /* =====LIGHT THEME =====*/
+
+  /* Background */
+  --bg-main: #f6f8fc;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-hover: #f1f5f9;
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+
+  /* Border */
+  --border-color: #e5e7eb;
+
+  /* Brand */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #eef2ff;
+
+  /* Success */
+  --success: #22c55e;
+  --success-light: #dcfce7;
+
+  /* Danger */
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+
+  /* Warning */
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+
+  /* Info */
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+
+  /* Shadow */
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+
+  /* Radius */
+  --radius: 16px;
+
+  /* Transition */
+  --transition: 0.3s ease;
+}
+.dark {
+  /*===== DARK THEME===== */
+
+  /* Background */
+  --bg-main: #18181b;
+  --bg-card: #27272a;
+  --bg-sidebar: #202023;
+  --bg-hover: #323238;
+
+  /* Text */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-light: #71717a;
+
+  /* Border */
+  --border-color: #3f3f46;
+
+  /* Brand */
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --primary-light: #312e81;
+
+  /* Success */
+  --success: #4ade80;
+  --success-light: #14532d;
+
+  /* Danger */
+  --danger: #f87171;
+  --danger-light: #7f1d1d;
+
+  /* Warning */
+  --warning: #fbbf24;
+  --warning-light: #78350f;
+
+  /* Info */
+  --info: #60a5fa;
+  --info-light: #1e3a8a;
+
+  /* Shadow */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+.hidden {
+  display: none !important;
+}
+html,
+body {
+  height: 100vh;
+  /* min-height: 100%; */
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+/* ===== AUTH PAGE ===== */
+
+.auth-container {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ==== LOGIN CARD ==== */
+
+.login-card,
+.register-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-card);
+  padding: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.login-card h1,
+.register-card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.login-card p,
+.register-card p {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.login-card span,
+.register-card span {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-box label {
+  font-size: 14px;
+  font-weight: 600;
+
+  color: var(--text-primary);
+}
+
+.input-box input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  outline: none;
+  transition: var(--transition);
+}
+.input-box input::placeholder {
+  color: var(--text-light);
+}
+.input-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 4px 1px var(--text-light);
+}
+.autho_btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.autho_btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+.register {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.register a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.register a:hover {
+  text-decoration: underline;
+}
+
+main {
+  height: 100%;
+  width: 100%;
+}
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px;
+  }
+
+  .login-card h1 {
+    font-size: 1.7rem;
+  }
+}
