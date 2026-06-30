@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
 
-  <body class="">
+  <body class="dark">
     <!-- Authentication -->
     <div class="auth-container">
       <!-- Login -->
@@ -79,11 +86,261 @@
 
     <!-- Main App -->
     <main class="app hidden">
-      <aside>Sidebar</aside>
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-layer-group"></i>
+          <div class="text">
+            <h1>FinTrack Pro</h1>
+            <p>Enterprise Finance</p>
+          </div>
+        </div>
 
-      <section>Dashboard</section>
-      <button id="logOut">long out</button>
+        <nav>
+          <button
+            id="dashboard"
+            class="active"
+            onclick="navBtnUpdate('dashboard')"
+          >
+            <i class="fa-solid fa-table-columns"></i>
+            Dashboard
+          </button>
+
+          <button id="settings" onclick="navBtnUpdate('settings')">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+          </button>
+
+          <button id="theme" onclick="navBtnUpdate('theme')">
+            <i id="icon" class="fa-solid fa-moon"></i>
+            Theme
+          </button>
+
+          <button id="profile" onclick="navBtnUpdate('profile')">
+            <i class="fa-solid fa-user"></i>
+            Profile
+          </button>
+
+          <button id="logout-Btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <header>
+          <button id="addTransaction">
+            <i class="fa-solid fa-plus"></i>
+            Add Transaction
+          </button>
+          <div class="user">
+            <div class="user-avatar" id="userAvatar">RO</div>
+            <span id="userName">Rohit</span>
+          </div>
+        </header>
+
+        <section class="dashboard">
+          <!-- ================= Summary Cards ================= -->
+
+          <div class="summary-cards">
+            <div class="card balance">
+              <div class="icon">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+
+              <h4>Total Balance</h4>
+              <h2 id="balance">
+                <span id="currency">₹</span>
+                <span id="balanceAmount">0</span>
+              </h2>
+            </div>
+
+            <div class="card income">
+              <div class="icon">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+              <h4>Total Income</h4>
+              <h2 id="income">
+                <span id="currency">₹</span>
+                <span id="incomeAmount">0</span>
+              </h2>
+            </div>
+
+            <div class="card expense">
+              <div class="icon">
+                <i class="fa-solid fa-arrow-trend-down"></i>
+              </div>
+              <h4>Total Expense</h4>
+              <h2 id="expense">
+                <span id="currency">₹</span>
+                <span id="expenseAmount">0</span>
+              </h2>
+            </div>
+
+            <div class="card savings">
+              <div class="icon">
+                <i class="fa-solid fa-piggy-bank"></i>
+              </div>
+              <h4>Savings</h4>
+              <h2 id="saving">
+                <span id="currency">₹</span>
+                <span id="savingAmount">0</span>
+              </h2>
+            </div>
+          </div>
+
+          <!-- ================= Expense Chart ================= -->
+
+          <div class="chart-container">
+            <div class="section-title">
+              <h3>Expense Overview</h3>
+            </div>
+
+            <canvas id="expenseChart"></canvas>
+          </div>
+
+          <!-- ================= Transaction History ================= -->
+
+          <div class="transaction-history">
+            <div class="table-header">
+              <h3>Transaction History</h3>
+
+              <div class="table-actions">
+                <div class="search-box">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+
+                  <input
+                    type="text"
+                    id="search"
+                    placeholder="Search transactions..."
+                    autocomplete="off"
+                  />
+                </div>
+
+                <div class="filter-box">
+                  <i class="fa-solid fa-filter"></i>
+
+                  <select id="filter">
+                    <option value="all">All</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="transactionBody">
+                  <tr id="emptyState">
+                    <td colspan="6">No transactions found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= Add Transaction Modal ================= -->
+
+      <div class="modal hidden" id="transactionModal">
+        <div class="modal-content">
+          <!-- Header -->
+
+          <div class="modal-header">
+            <h2>Add Transaction</h2>
+
+            <button class="close-btn" id="closeModal">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Form -->
+
+          <form id="transactionForm">
+            <div class="form-grid">
+              <div class="input-group">
+                <label>Type</label>
+                <select id="type" required>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="category">Category</label>
+
+                <select id="category" required>
+                  <optgroup label="💰 Income">
+                    <option value="salary">Salary</option>
+                    <option value="business">Business</option>
+                    <option value="freelancing">Freelancing</option>
+                    <option value="investment">Investment</option>
+                    <option value="bonus">Bonus</option>
+                    <option value="gift">Gift</option>
+                    <option value="interest">Interest</option>
+                    <option value="other-income">Other</option>
+                  </optgroup>
+
+                  <optgroup label="💸 Expense">
+                    <option value="food">Food</option>
+                    <option value="transport">Transport</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="rent">Rent</option>
+                    <option value="bills">Bills</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="health">Health</option>
+                    <option value="education">Education</option>
+                    <option value="travel">Travel</option>
+                    <option value="other-expense">Other</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="input-group full-width">
+                <label>Description</label>
+                <input
+                  type="text"
+                  id="description"
+                  placeholder="e.g. Amazon, Salary, Coffee"
+                />
+              </div>
+
+              <div class="input-group">
+                <label>Amount</label>
+
+                <div class="amount-box">
+                  <span class="currency">₹</span>
+                  <input type="number" id="amount" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Date</label>
+                <input type="date" id="date" />
+              </div>
+            </div>
+
+            <button class="submit-btn">Add Transaction</button>
+          </form>
+        </div>
+      </div>
     </main>
+
     <script src="./app.js"></script>
   </body>
 </html>

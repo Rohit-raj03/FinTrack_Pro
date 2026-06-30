@@ -14,7 +14,34 @@ const loginForm = document.querySelector("#loginForm");
 const loginUsername = document.querySelector("#loginUsername");
 const loginPassword = document.querySelector("#loginPassword");
 
-const logOut = document.querySelector("#logOut");
+const logoutBtn = document.querySelector("#logout-Btn");
+
+// Theme toggle feature...!
+const theme = document.querySelector("#theme");
+const Icon = document.querySelector("#icon");
+
+// Page load hone par theme apply karo
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  Icon.classList.replace("fa-moon", "fa-sun");
+} else {
+  document.body.classList.remove("dark");
+  Icon.classList.replace("fa-sun", "fa-moon");
+}
+
+theme.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    Icon.classList.replace("fa-moon", "fa-sun");
+    localStorage.setItem("theme", "dark");
+  } else {
+    Icon.classList.replace("fa-sun", "fa-moon");
+    localStorage.setItem("theme", "light");
+  }
+});
 
 function showLogin() {
   loginCard.classList.remove("hidden");
@@ -32,6 +59,7 @@ login.addEventListener("click", (e) => {
 
 sign_up.addEventListener("click", (e) => {
   e.preventDefault();
+  loginForm.reset();
   showRegister();
 });
 
@@ -49,7 +77,6 @@ function logout() {
 // Registration
 
 let user = JSON.parse(localStorage.getItem("user"));
-
 registerForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -79,6 +106,7 @@ registerForm.addEventListener("submit", (e) => {
   registerForm.reset();
   registerCard.classList.add("hidden");
   loginCard.classList.remove("hidden");
+  showUserName();
 });
 
 //login
@@ -107,6 +135,9 @@ loginForm.addEventListener("submit", (e) => {
   } else {
     alert("login faild");
   }
+
+  loginForm.reset();
+  showRegister();
 });
 
 function openDashboard() {
@@ -120,7 +151,54 @@ function openDashboard() {
 }
 openDashboard();
 
-logOut.addEventListener("click", () => {
+logoutBtn.addEventListener("click", () => {
   localStorage.setItem("isLoggedIn", "false");
   openDashboard();
+});
+
+function showUserName() {
+  const userName = document.querySelector("#userName");
+  const userAvatar = document.querySelector("#userAvatar");
+
+  userName.textContent = user.username;
+  userAvatar.textContent = user.username.slice(0, 2).toUpperCase();
+}
+showUserName();
+
+// State
+let activePage = "dashboard";
+
+// Render Function
+function render() {
+  document
+    .querySelector("#dashboard")
+    .classList.toggle("active", activePage === "dashboard");
+  document
+    .querySelector("#settings")
+    .classList.toggle("active", activePage === "settings");
+  document
+    .querySelector("#theme")
+    .classList.toggle("active", activePage === "theme");
+  document
+    .querySelector("#profile")
+    .classList.toggle("active", activePage === "profile");
+}
+function navBtnUpdate(page) {
+  activePage = page;
+  render();
+}
+render();
+
+const addTransaction = document.querySelector("#addTransaction");
+const transactionModal = document.querySelector("#transactionModal");
+const closeModal = document.querySelector("#closeModal");
+
+// Open Modal
+addTransaction.addEventListener("click", () => {
+  transactionModal.classList.remove("hidden");
+});
+
+// Close Modal
+closeModal.addEventListener("click", () => {
+  transactionModal.classList.add("hidden");
 });
