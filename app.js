@@ -16,6 +16,13 @@ const loginPassword = document.querySelector("#loginPassword");
 
 const logoutBtn = document.querySelector("#logout-Btn");
 
+const balanceAmount = document.querySelector("#balanceAmount");
+const incomeAmount = document.querySelector("#incomeAmount");
+const expenseAmount = document.querySelector("#expenseAmount");
+const savingAmount = document.querySelector("#savingAmount");
+
+let chart;
+
 // Theme toggle feature...!
 const theme = document.querySelector("#theme");
 const Icon = document.querySelector("#icon");
@@ -202,3 +209,169 @@ addTransaction.addEventListener("click", () => {
 closeModal.addEventListener("click", () => {
   transactionModal.classList.add("hidden");
 });
+
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+const transactionForm = document.querySelector("#transactionForm");
+transactionForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  console.log(e);
+  const type = document.querySelector("#type").value;
+  const category = document.querySelector("#category").value;
+  const description = document.querySelector("#description").value.trim();
+  const amount = Number(document.querySelector("#amount").value);
+  const date = document.querySelector("#date").value;
+
+  if (
+    type === "" ||
+    category === "" ||
+    description === "" ||
+    amount === "" ||
+    date === ""
+  ) {
+    alert("Please  fill all feaild");
+    return;
+  }
+  const transaction = {
+    id: Date.now(),
+    type,
+    category,
+    description,
+    amount,
+    date,
+  };
+
+  transactions.push(transaction);
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  transactionForm.reset();
+  transactionModal.classList.add("hidden");
+  renderTransactions();
+});
+
+const transactionBody = document.querySelector("#transactionBody");
+const emptyState = document.querySelector("#emptyState");
+
+function renderTransactions() {
+  transactionBody.innerHTML = "";
+
+  if (transactions.length === 0) {
+    transactionBody.innerHTML = `
+      <tr>
+        <td colspan="6">No transactions found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  transactions.forEach((transaction) => {
+    const typeText =
+      transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1);
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${transaction.date}</td>
+      <td>${transaction.description}</td>
+      <td>${transaction.category}</td>
+      <td class="${transaction.type}">
+        ${typeText}
+      </td>
+      <td class="${transaction.type}">
+        ${
+          transaction.type === "income" ? "+" : "-"
+        } <span class="currency">₹</span>${transaction.amount.toLocaleString("en-IN")}
+      </td>
+
+      <td>
+        <button onclick="delTransaction('${transaction.id}')"
+          class="delete-btn"
+          data-id="${transaction.id}"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    `;
+
+    transactionBody.append(tr);
+  });
+  amountDashBoard();
+}
+renderTransactions();
+
+function amountDashBoard() {
+  const totalIncome = transactions
+    .filter((item) => item.type === "income")
+    .reduce((acc, item) => acc + item.amount, 0);
+
+  const totalExpense = transactions
+    .filter((item) => item.type === "expense")
+    .reduce((acc, item) => acc + item.amount, 0);
+
+  const totalBalance =
+    totalIncome > totalExpense
+      ? totalIncome + totalExpense
+      : totalIncome - totalExpense;
+  const savings = totalBalance > 0 ? totalIncome - totalExpense : 0;
+
+  balanceAmount.textContent = ` ${totalBalance}`;
+  incomeAmount.textContent = `${totalIncome}`;
+  expenseAmount.textContent = `${totalExpense}`;
+  savingAmount.textContent = `${savings}`;
+  renderChart();
+}
+amountDashBoard();
+
+function renderChart() {
+  const ctx = document.getElementById("expenseChart");
+
+  if (chart) {
+    chart.destroy();
+  }
+
+  const income = Number(incomeAmount.textContent);
+  const expense = Number(expenseAmount.textContent);
+
+  console.log(expense);
+  chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Income", "Expense"],
+      datasets: [
+        {
+          label: "Income",
+          data: [income, 0],
+          backgroundColor: "green",
+        },
+        {
+          label: "Expense",
+          data: [0, expense],
+          backgroundColor: "red",
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+}
+renderChart();
+
+function delTransaction(id) {
+  const index = transactions.findIndex(
+    (transaction) => transaction.id === Number(id),
+  );
+  const yes = confirm("can you delete the transaction ");
+  if (!yes) return;
+
+  if (index !== -1) {
+    transactions.splice(index, 1);
+    renderTransactions();
+
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+  }
+}
+
